@@ -6,6 +6,10 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+
     <RelativeLayout
         android:id="@+id/temp_layout"
         android:layout_width="match_parent"
