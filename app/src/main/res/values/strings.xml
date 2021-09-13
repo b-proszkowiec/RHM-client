@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">RHM-client</string>
+
+    <!-- activity_main -->
+    <string name="temperature">Temperature:</string>
+    <string name="temperature_val">20</string>
+    <string name="celsius">\u2103</string>
+    <string name="humidity">Humidity:</string>
+    <string name="humidity_val">20%</string>
+    <string name="measurement_date">Date:</string>
+    <string name="measurement_date_val">YYYY-MM-DD HH:MM:SS</string>
+    <string name="update_button_text">Update</string>
+
 </resources>
