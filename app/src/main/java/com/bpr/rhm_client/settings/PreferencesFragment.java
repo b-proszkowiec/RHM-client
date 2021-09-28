@@ -22,7 +22,7 @@ public class PreferencesFragment extends PreferenceFragmentCompat {
         setPreferencesFromResource(R.xml.preferences, rootKey);
         ipPreference = findPreference("ip");
         portPreference = findPreference("port");
-        areaUnitPreference = findPreference("unit");
+        areaUnitPreference = findPreference("temp_unit");
         initOptionValues();
 
         portPreference.setOnBindEditTextListener(editText -> {
