@@ -1,10 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <androidx.preference.SwitchPreference
-        android:defaultValue="true"
-        android:key="example_switch"
-        android:summary="Turn this option on or off"
-        android:title="Settings option" />
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:key="server"
+        android:title="@string/settings_title_server">
+        <androidx.preference.EditTextPreference
+            android:key="ip"
+            android:defaultValue="0.0.0.0"
+            android:dialogTitle="@string/server_ip_dialog_title"
+            android:persistent="true"
+            android:title="@string/server_ip" />
+
+        <androidx.preference.EditTextPreference
+            android:key="port"
+            android:defaultValue="20000"
+            android:dialogTitle="@string/server_port_dialog_title"
+            android:persistent="true"
+            android:title="@string/server_port" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="units"
+        android:title="@string/settings_title_units">
+        <ListPreference
+            android:defaultValue="celsius"
+            android:entries="@array/temp_unit_entries"
+            android:entryValues="@array/temp_unit_values"
+            android:key="unit"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:title="@string/pref_title_temperature" />
+
+    </PreferenceCategory>
+
 </androidx.preference.PreferenceScreen>
