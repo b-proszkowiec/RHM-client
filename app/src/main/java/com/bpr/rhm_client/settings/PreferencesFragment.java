@@ -23,7 +23,6 @@ public class PreferencesFragment extends PreferenceFragmentCompat {
         ipPreference = findPreference("ip");
         portPreference = findPreference("port");
         areaUnitPreference = findPreference("temp_unit");
-        initOptionValues();
 
         portPreference.setOnBindEditTextListener(editText -> {
             editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
@@ -32,6 +31,7 @@ public class PreferencesFragment extends PreferenceFragmentCompat {
 
         ipPreference.setOnPreferenceChangeListener((preference, newValue) -> {
             ipPreference.setText(newValue.toString());
+            Options.setIpAddress(ipPreference.getText());
             return false;
         });
 
@@ -44,13 +44,8 @@ public class PreferencesFragment extends PreferenceFragmentCompat {
             } else {
                 portPreference.setText(newValue.toString());
             }
+            Options.setIpPort(Integer.parseInt(portPreference.getText()));
             return false;
         });
-    }
-
-    private void initOptionValues() {
-        Options.setIpAddress(ipPreference.getText());
-        Options.setIpPort(Integer.parseInt(portPreference.getText()));
-        Options.setTemperatureUnit(areaUnitPreference.getValue());
     }
 }

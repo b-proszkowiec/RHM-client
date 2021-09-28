@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -13,22 +14,27 @@ import androidx.preference.PreferenceManager;
 import com.bpr.rhm_client.communication.AM2302;
 import com.bpr.rhm_client.settings.Options;
 
+import java.util.Locale;
+
 public class MainActivity extends AppCompatActivity implements IListener {
 
-    Button updateButton;
-    AM2302 controller = new AM2302(this);
+    private TextView temperatureTextView;
+    private TextView humidityTextView;
+    private TextView dateTextView;
+    private AM2302 controller = new AM2302(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Button updateButton = findViewById(R.id.updateButton);
+        updateButton.setOnClickListener(v -> controller.infoUpdate());
+        temperatureTextView = findViewById(R.id.temp_value);
+        humidityTextView = findViewById(R.id.humidity_value);
+        dateTextView = findViewById(R.id.date_value);
 
-        updateButton = findViewById(R.id.updateButton);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        updateButton.setOnClickListener(v -> controller.infoUpdate());
-
         updateSettings();
     }
 
@@ -50,8 +56,15 @@ public class MainActivity extends AppCompatActivity implements IListener {
 
     @Override
     public void onResponseReceived(String[] data) {
-        Float humidity = Float.parseFloat(data[2]);
-        Float temperature = Float.parseFloat(data[1]);
-        String date = data[0];
+
+        runOnUiThread(() -> {
+            Integer humidity = (int) Float.parseFloat(data[2]);
+            Float temperature = Float.parseFloat(data[1]);
+            String date = data[0];
+
+            humidityTextView.setText(String.format(Locale.US,"%d %%", humidity));
+            temperatureTextView.setText(String.format(Locale.US,"%.1f", temperature));
+            dateTextView.setText(date);
+        });
     }
 }
