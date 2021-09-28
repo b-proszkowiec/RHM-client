@@ -23,6 +23,10 @@ public class MainActivity extends AppCompatActivity implements IListener {
     private TextView dateTextView;
     private AM2302 controller = new AM2302(this);
 
+    private String humidity;
+    private String temperature;
+    private String date;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements IListener {
         Options.setIpAddress(serverIP);
         Options.setIpPort(Integer.parseInt(serverPort));
         Options.setTemperatureUnit(tempUnit);
+        controller.infoUpdate();
     }
 
     public void onSettingClick(View view) {
@@ -56,14 +61,17 @@ public class MainActivity extends AppCompatActivity implements IListener {
 
     @Override
     public void onResponseReceived(String[] data) {
+        humidity = "--";
+        temperature = "--";
+        date = data[0];
 
+        if (data.length == 3) {
+            humidity = String.format(Locale.US, "%d %%", (int) Float.parseFloat(data[2]));
+            temperature = String.format(Locale.US, "%.1f", Float.parseFloat(data[1]));
+        }
         runOnUiThread(() -> {
-            Integer humidity = (int) Float.parseFloat(data[2]);
-            Float temperature = Float.parseFloat(data[1]);
-            String date = data[0];
-
-            humidityTextView.setText(String.format(Locale.US,"%d %%", humidity));
-            temperatureTextView.setText(String.format(Locale.US,"%.1f", temperature));
+            humidityTextView.setText(humidity);
+            temperatureTextView.setText(temperature);
             dateTextView.setText(date);
         });
     }
