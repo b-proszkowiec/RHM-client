@@ -20,12 +20,34 @@ public class AM2302 {
     // vars
     private IListener listener;
 
-    private void triggerListenerEvent(String[] response) {
-        listener.onResponseReceived(response);
-    }
-
+    /**
+     * Constructor of AM2302 class.
+     *
+     * @param listener register listener to getting data from server side.
+     */
     public AM2302(IListener listener) {
         this.listener = listener;
+    }
+
+    /**
+     * Trigger server to get measurement update.
+     * New data will be accessible by using onResponseReceived event of IListener interface.
+     *
+     */
+    public void infoUpdate() {
+        Thread thread = new Thread(() -> {
+            try {
+                infoUpdateNewThread();
+            } catch (Exception e) {
+                Log.e(LOG_TAG, "Exception while creating new thread!");
+                e.printStackTrace();
+            }
+        });
+        thread.start();
+    }
+
+    private void triggerListenerEvent(String[] response) {
+        listener.onResponseReceived(response);
     }
 
     private static String[] printResponse(String text) {
@@ -42,19 +64,7 @@ public class AM2302 {
         return new String[]{date, temp.substring(0, temp.length() - 1), humidity.substring(0, humidity.length() - 1)};
     }
 
-    public void infoUpdate() {
-        Thread thread = new Thread(() -> {
-            try {
-                infoUpdateNewThread();
-            } catch (Exception e) {
-                Log.e(LOG_TAG, "Exception while creating new thread!");
-                e.printStackTrace();
-            }
-        });
-        thread.start();
-    }
-
-    public void infoUpdateNewThread() {
+    private void infoUpdateNewThread() {
         byte[] buffer = new byte[100];
         String ipAddress = Options.getIpAddress();
         DatagramPacket receivePacket = new DatagramPacket(buffer, buffer.length);

@@ -42,18 +42,11 @@ public class MainActivity extends AppCompatActivity implements IListener {
         updateSettings();
     }
 
-    void updateSettings() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String serverIP = sharedPreferences.getString("ip", "0.0.0.0");
-        String serverPort = sharedPreferences.getString("port", "0");
-        String tempUnit = sharedPreferences.getString("temp_unit", "n/a");
-
-        Options.setIpAddress(serverIP);
-        Options.setIpPort(Integer.parseInt(serverPort));
-        Options.setTemperatureUnit(tempUnit);
-        controller.infoUpdate();
-    }
-
+    /**
+     * Start SettingsActivity activity after click settings button.
+     *
+     * @param view current view.
+     */
     public void onSettingClick(View view) {
         Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
         startActivity(intent);
@@ -74,5 +67,17 @@ public class MainActivity extends AppCompatActivity implements IListener {
             temperatureTextView.setText(temperature);
             dateTextView.setText(date);
         });
+    }
+
+    private void updateSettings() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String serverIP = sharedPreferences.getString("ip", "0.0.0.0");
+        String serverPort = sharedPreferences.getString("port", "0");
+        String tempUnit = sharedPreferences.getString("temp_unit", "n/a");
+
+        Options.setIpAddress(serverIP);
+        Options.setIpPort(Integer.parseInt(serverPort));
+        Options.setTemperatureUnit(tempUnit);
+        controller.infoUpdate();
     }
 }
