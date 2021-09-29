@@ -25,7 +25,7 @@ public class PreferencesFragment extends PreferenceFragmentCompat {
         areaUnitPreference = findPreference("temp_unit");
 
         ipPreference.setOnPreferenceChangeListener((preference, newValue) -> {
-            ipPreference.setText(newValue.toString());
+            ipPreference.setText(newValue.toString().trim());
             Options.getInstance().setIpAddress(ipPreference.getText());
             return false;
         });
