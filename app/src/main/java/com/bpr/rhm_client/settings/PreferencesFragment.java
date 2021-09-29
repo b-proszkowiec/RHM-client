@@ -22,17 +22,17 @@ public class PreferencesFragment extends PreferenceFragmentCompat {
         setPreferencesFromResource(R.xml.preferences, rootKey);
         ipPreference = findPreference("ip");
         portPreference = findPreference("port");
-        areaUnitPreference = findPreference("unit");
-        initOptionValues();
+        areaUnitPreference = findPreference("temp_unit");
+
+        ipPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+            ipPreference.setText(newValue.toString());
+            Options.getInstance().setIpAddress(ipPreference.getText());
+            return false;
+        });
 
         portPreference.setOnBindEditTextListener(editText -> {
             editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
             editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(5)});
-        });
-
-        ipPreference.setOnPreferenceChangeListener((preference, newValue) -> {
-            ipPreference.setText(newValue.toString());
-            return false;
         });
 
         portPreference.setOnPreferenceChangeListener((preference, newValue) -> {
@@ -44,13 +44,14 @@ public class PreferencesFragment extends PreferenceFragmentCompat {
             } else {
                 portPreference.setText(newValue.toString());
             }
+            Options.getInstance().setIpPort(Integer.parseInt(portPreference.getText()));
             return false;
         });
-    }
 
-    private void initOptionValues() {
-        Options.setIpAddress(ipPreference.getText());
-        Options.setIpPort(Integer.parseInt(portPreference.getText()));
-        Options.setTemperatureUnit(areaUnitPreference.getValue());
+        areaUnitPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+            areaUnitPreference.setValue(newValue.toString());
+            Options.getInstance().setTemperatureUnit(areaUnitPreference.getValue());
+            return false;
+        });
     }
 }

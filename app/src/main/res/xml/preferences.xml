@@ -23,12 +23,9 @@
         android:key="units"
         android:title="@string/settings_title_units">
         <ListPreference
-            android:defaultValue="celsius"
             android:entries="@array/temp_unit_entries"
             android:entryValues="@array/temp_unit_values"
-            android:key="unit"
-            android:negativeButtonText="@null"
-            android:positiveButtonText="@null"
+            android:key="temp_unit"
             android:title="@string/pref_title_temperature" />
 
     </PreferenceCategory>
