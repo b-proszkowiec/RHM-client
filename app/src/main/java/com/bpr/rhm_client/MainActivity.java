@@ -21,8 +21,9 @@ public class MainActivity extends AppCompatActivity implements IListener {
     private TextView humidityTextView;
     private TextView dateTextView;
     private TextView tempUnitTextView;
+    private View updateButton;
+    private View loadingPanel;
     private AM2302 controller = new AM2302(this);
-
     private Measurement lastMeasurement;
     private String humidity;
     private String temperature;
@@ -32,15 +33,20 @@ public class MainActivity extends AppCompatActivity implements IListener {
     protected void onStart() {
         super.onStart();
         setTemperatureUnit();
-        fillMeasurementData(lastMeasurement);
+        fillMeasurementData(lastMeasurement, getResources().getString(R.string.measurement_date_val));
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Button updateButton = findViewById(R.id.updateButton);
-        updateButton.setOnClickListener(v -> controller.infoUpdate());
+        updateButton = findViewById(R.id.updateButton);
+        updateButton.setOnClickListener(v -> {
+            controller.infoUpdate();
+            setVisible(loadingPanel, true);
+            setVisible(updateButton, false);
+        });
+        loadingPanel = findViewById(R.id.loadingPanel);
         temperatureTextView = findViewById(R.id.temp_value);
         humidityTextView = findViewById(R.id.humidity_value);
         dateTextView = findViewById(R.id.date_value);
@@ -69,13 +75,23 @@ public class MainActivity extends AppCompatActivity implements IListener {
         if (data.length == 3) {
             lastMeasurement = new Measurement(data);
         }
-        fillMeasurementData(lastMeasurement);
+        fillMeasurementData(lastMeasurement, data[0]);
+        setVisible(loadingPanel, false);
+        setVisible(updateButton, true);
     }
 
-    private void fillMeasurementData(Measurement measurement) {
+    private void setVisible(View element, Boolean state) {
+        if (state == true) {
+            element.setVisibility(View.VISIBLE);
+        } else {
+            element.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private void fillMeasurementData(Measurement measurement, String defaultDate) {
         humidity = "--";
         temperature = "--";
-        date = getResources().getString(R.string.measurement_date_val);
+        date = defaultDate;
 
         if (measurement != null) {
             humidity = measurement.getHumidityFormatted();

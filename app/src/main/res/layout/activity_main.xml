@@ -123,6 +123,18 @@
             android:fontFamily="sans-serif-thin"
             android:text="@string/update_button_text" />
 
+        <ProgressBar
+            android:id="@+id/loadingPanel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/date_value"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"
+            android:indeterminateDrawable="@drawable/progress"
+            android:visibility="invisible"
+            android:indeterminate="true" />
+
     </RelativeLayout>
 
 </LinearLayout>
