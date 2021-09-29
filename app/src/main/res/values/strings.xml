@@ -4,7 +4,9 @@
     <!-- activity_main -->
     <string name="temperature">Temperature:</string>
     <string name="temperature_val">--</string>
-    <string name="celsius">\u2103</string>
+    <string name="celsius_unit">\u2103</string>
+    <string name="kelvin_unit">\u212A</string>
+    <string name="fahrenheit_unit">\u2109</string>
     <string name="humidity">Humidity:</string>
     <string name="humidity_val">--</string>
     <string name="measurement_date">Date:</string>

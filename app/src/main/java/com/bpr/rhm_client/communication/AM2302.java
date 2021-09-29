@@ -66,13 +66,13 @@ public class AM2302 {
 
     private void infoUpdateNewThread() {
         byte[] buffer = new byte[100];
-        String ipAddress = Options.getIpAddress();
+        String ipAddress = Options.getInstance().getIpAddress();
         DatagramPacket receivePacket = new DatagramPacket(buffer, buffer.length);
 
         try {
             InetAddress IPAddress = InetAddress.getByName(ipAddress);
             DatagramSocket socket = new DatagramSocket();
-            DatagramPacket sendPacket = new DatagramPacket(COMMAND.getBytes(), COMMAND.getBytes().length, IPAddress, Options.getIpPort());
+            DatagramPacket sendPacket = new DatagramPacket(COMMAND.getBytes(), COMMAND.getBytes().length, IPAddress, Options.getInstance().getIpPort());
             socket.send(sendPacket);
             socket.setSoTimeout(SOCKET_TIMEOUT);
             socket.receive(receivePacket);

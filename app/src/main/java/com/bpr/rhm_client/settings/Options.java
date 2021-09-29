@@ -13,11 +13,37 @@ public class Options {
     }
 
     /**
+     * Gets a Options using the defaults.
+     *
+     * @return unique instance of Options.
+     */
+    public static Options getInstance() {
+        return INSTANCE;
+    }
+
+    /**
+     * Convert temperature from celsius to given unit in settings.
+     *
+     * @param temperatureInCelsius temperature in celsius.
+     * @return temperature in given unit.
+     */
+    public Float getTemperatureBasedOnUnit(Float temperatureInCelsius) {
+        switch (getTemperatureUnit()) {
+            case "kelvin":
+                return temperatureInCelsius + (float) 273.15;
+            case "fahrenheit":
+                return temperatureInCelsius * (float) 1.8 + (float) 32;
+            default:
+                return temperatureInCelsius;
+        }
+    }
+
+    /**
      * Gets temperature unit based on settings.
      *
      * @return temperature unit.
      */
-    public static String getTemperatureUnit() {
+    public String getTemperatureUnit() {
         return temperatureUnit;
     }
 
@@ -26,7 +52,7 @@ public class Options {
      *
      * @param temperatureUnit temperature unit.
      */
-    public static void setTemperatureUnit(String temperatureUnit) {
+    public void setTemperatureUnit(String temperatureUnit) {
         Options.temperatureUnit = temperatureUnit;
     }
 
@@ -35,7 +61,7 @@ public class Options {
      *
      * @return ip or url address
      */
-    public static String getIpAddress() {
+    public String getIpAddress() {
         return ipAddress;
     }
 
@@ -44,7 +70,7 @@ public class Options {
      *
      * @param ipAddress ip or url address
      */
-    public static void setIpAddress(String ipAddress) {
+    public void setIpAddress(String ipAddress) {
         Options.ipAddress = ipAddress;
     }
 
@@ -53,7 +79,7 @@ public class Options {
      *
      * @return port number.
      */
-    public static int getIpPort() {
+    public int getIpPort() {
         return ipPort;
     }
 
@@ -62,7 +88,7 @@ public class Options {
      *
      * @param ipPort port number.
      */
-    public static void setIpPort(int ipPort) {
+    public void setIpPort(int ipPort) {
         Options.ipPort = ipPort;
     }
 }

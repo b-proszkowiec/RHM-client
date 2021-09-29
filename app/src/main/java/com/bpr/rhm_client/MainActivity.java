@@ -12,20 +12,28 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.preference.PreferenceManager;
 
 import com.bpr.rhm_client.communication.AM2302;
+import com.bpr.rhm_client.communication.Measurement;
 import com.bpr.rhm_client.settings.Options;
-
-import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements IListener {
 
     private TextView temperatureTextView;
     private TextView humidityTextView;
     private TextView dateTextView;
+    private TextView tempUnitTextView;
     private AM2302 controller = new AM2302(this);
 
+    private Measurement lastMeasurement;
     private String humidity;
     private String temperature;
     private String date;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        setTemperatureUnit();
+        fillMeasurementData(lastMeasurement);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,10 +44,12 @@ public class MainActivity extends AppCompatActivity implements IListener {
         temperatureTextView = findViewById(R.id.temp_value);
         humidityTextView = findViewById(R.id.humidity_value);
         dateTextView = findViewById(R.id.date_value);
+        tempUnitTextView = findViewById(R.id.temp_unit);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         updateSettings();
+        setTemperatureUnit();
     }
 
     /**
@@ -54,19 +64,45 @@ public class MainActivity extends AppCompatActivity implements IListener {
 
     @Override
     public void onResponseReceived(String[] data) {
-        humidity = "--";
-        temperature = "--";
-        date = data[0];
+        lastMeasurement = null;
 
         if (data.length == 3) {
-            humidity = String.format(Locale.US, "%d %%", (int) Float.parseFloat(data[2]));
-            temperature = String.format(Locale.US, "%.1f", Float.parseFloat(data[1]));
+            lastMeasurement = new Measurement(data);
         }
+        fillMeasurementData(lastMeasurement);
+    }
+
+    private void fillMeasurementData(Measurement measurement) {
+        humidity = "--";
+        temperature = "--";
+        date = getResources().getString(R.string.measurement_date_val);
+
+        if (measurement != null) {
+            humidity = measurement.getHumidityFormatted();
+            temperature = measurement.getTemperatureFormatted();
+            date = measurement.getMeasurementDate();
+        }
+
         runOnUiThread(() -> {
             humidityTextView.setText(humidity);
             temperatureTextView.setText(temperature);
             dateTextView.setText(date);
         });
+    }
+
+    private void setTemperatureUnit() {
+        String temperatureUnit;
+        switch (Options.getInstance().getTemperatureUnit()) {
+            case "kelvin":
+                temperatureUnit = getResources().getString(R.string.kelvin_unit);
+                break;
+            case "fahrenheit":
+                temperatureUnit = getResources().getString(R.string.fahrenheit_unit);
+                break;
+            default:
+                temperatureUnit = getResources().getString(R.string.celsius_unit);
+        }
+        tempUnitTextView.setText(temperatureUnit);
     }
 
     private void updateSettings() {
@@ -75,9 +111,9 @@ public class MainActivity extends AppCompatActivity implements IListener {
         String serverPort = sharedPreferences.getString("port", "0");
         String tempUnit = sharedPreferences.getString("temp_unit", "n/a");
 
-        Options.setIpAddress(serverIP);
-        Options.setIpPort(Integer.parseInt(serverPort));
-        Options.setTemperatureUnit(tempUnit);
+        Options.getInstance().setIpAddress(serverIP);
+        Options.getInstance().setIpPort(Integer.parseInt(serverPort));
+        Options.getInstance().setTemperatureUnit(tempUnit);
         controller.infoUpdate();
     }
 }

@@ -46,12 +46,13 @@
             android:textSize="100sp" />
 
         <TextView
+            android:id="@+id/temp_unit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/temp_value"
             android:layout_toEndOf="@+id/temp_value"
             android:paddingStart="15dp"
-            android:text="@string/celsius"
+            android:text="@string/celsius_unit"
             android:textSize="30sp"
             tools:ignore="RtlSymmetry" />
 
