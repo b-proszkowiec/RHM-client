@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">RHM-client</string>
+    <string name="app_name">Home Manager</string>
 
     <!-- activity_main -->
     <string name="temperature">Temperature:</string>
