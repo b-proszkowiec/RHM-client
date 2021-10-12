@@ -3,8 +3,8 @@ package com.bpr.rhm_client;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +15,8 @@ import com.bpr.rhm_client.communication.AM2302;
 import com.bpr.rhm_client.communication.Measurement;
 import com.bpr.rhm_client.settings.Options;
 
+import static com.bpr.rhm_client.constants.GlobalConstants.SENDING_FAIL_MSG;
+
 public class MainActivity extends AppCompatActivity implements IListener {
 
     private TextView temperatureTextView;
@@ -24,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements IListener {
     private View updateButton;
     private View loadingPanel;
     private AM2302 controller = new AM2302(this);
+    private PopUpInfo popUpInfo = new PopUpInfo();
     private Measurement lastMeasurement;
     private String humidity;
     private String temperature;
@@ -58,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements IListener {
         setTemperatureUnit();
     }
 
+
     /**
      * Start SettingsActivity activity after click settings button.
      *
@@ -74,6 +78,10 @@ public class MainActivity extends AppCompatActivity implements IListener {
 
         if (data.length == 3) {
             lastMeasurement = new Measurement(data);
+        } else if ("SEND FAILURE".equals(data[0])) {
+            runOnUiThread(() -> {
+                popUpInfo.showPopupWindow(findViewById(R.id.humidity_layout), Html.fromHtml(SENDING_FAIL_MSG, Html.FROM_HTML_MODE_LEGACY));
+            });
         }
         fillMeasurementData(lastMeasurement, data[0]);
         setVisible(loadingPanel, false);
@@ -81,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements IListener {
     }
 
     private void setVisible(View element, Boolean state) {
-        if (state == true) {
+        if (state) {
             element.setVisibility(View.VISIBLE);
         } else {
             element.setVisibility(View.INVISIBLE);
@@ -130,6 +138,8 @@ public class MainActivity extends AppCompatActivity implements IListener {
         Options.getInstance().setIpAddress(serverIP);
         Options.getInstance().setIpPort(Integer.parseInt(serverPort));
         Options.getInstance().setTemperatureUnit(tempUnit);
-        controller.infoUpdate();
+        findViewById(R.id.temp_layout).post(() -> controller.infoUpdate());
+        setVisible(loadingPanel, true);
+        setVisible(updateButton, false);
     }
 }

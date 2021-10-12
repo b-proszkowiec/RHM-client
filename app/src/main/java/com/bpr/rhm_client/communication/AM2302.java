@@ -30,8 +30,8 @@ public class AM2302 {
     }
 
     /**
-     * Trigger server to get measurement update.
-     * New data will be accessible by using onResponseReceived event of IListener interface.
+     * Send request to the server to get measurement update.
+     * New data will be accessible by using onResponseReceived event on IListener interface.
      *
      */
     public void infoUpdate() {
@@ -79,15 +79,15 @@ public class AM2302 {
             socket.close();
         } catch (UnknownHostException e) {
             Log.e(LOG_TAG, "Cannot send packet due UnknownHostException!");
+            triggerListenerEvent(new String[]{"SEND FAILURE"});
         } catch (SocketTimeoutException e) {
             Log.e(LOG_TAG, "Socket timeout while waiting for response!");
         } catch (SocketException e) {
             Log.e(LOG_TAG, "SocketException while waiting for response!");
         } catch (Exception e) {
             Log.e(LOG_TAG, "Exception while waiting for response!");
-        } finally {
-            String serverResponse = new String(receivePacket.getData());
-            triggerListenerEvent(printResponse(serverResponse));
         }
+        String serverResponse = new String(receivePacket.getData());
+        triggerListenerEvent(printResponse(serverResponse));
     }
 }
